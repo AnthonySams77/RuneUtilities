@@ -1,19 +1,43 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from "rxjs/operators";
+import { resolve } from 'path';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ItemDataService {
+export class ItemDataService implements OnInit {
 
   baseUrl:string = "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
-
+  itemJSONLocalUrl:string = "./app/assets/itemInfo.json";
+  simpleItemArray:ISimpleItem[] = null;
 
   constructor(private http:HttpClient) { }
+
+  ngOnInit() {
+    this.getItemIdArray();
+  }
 
   getItemInfo(id:string) {
     return this.http.get(this.baseUrl + id);
   }
+
+  getItemIdArray(){
+    return this.http.get(this.itemJSONLocalUrl).pipe(
+      map((resp: Response) => resp.json().then(
+        res => {
+          this.simpleItemArray = res.json;
+          resolve();
+        }
+      )));
+  }
+
+}
+
+export interface ISimpleItem {
+  name:string;
+  id:string;
 }
 
 export interface IItem {
