@@ -14,7 +14,9 @@ const routes: Routes = [
   {
     path: 'list',
     loadChildren: './list/list.module#ListPageModule'
-  }
+  },
+  { path: 'bhshop', loadChildren: './bhshop/bhshop.module#BHShopPageModule' },
+  { path: 'bolt-calc', loadChildren: './bolt-calc/bolt-calc.module#BoltCalcPageModule' }
 ];
 
 @NgModule({
