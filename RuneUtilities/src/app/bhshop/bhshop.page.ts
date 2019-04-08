@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./bhshop.page.scss'],
 })
 export class BHShopPage implements OnInit {
-
+  itemsArray = [];
   constructor() { }
 
   ngOnInit() {
