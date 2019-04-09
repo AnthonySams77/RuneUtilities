@@ -12,6 +12,7 @@ export class ItemDataService implements OnInit {
   baseUrl:string = "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
   itemJSONLocalUrl:string = "./app/assets/itemInfo.json";
   simpleItemArray:ISimpleItem[] = null;
+  itemArray:IItem[] = null;
 
   constructor(private http:HttpClient) { }
 
@@ -19,8 +20,21 @@ export class ItemDataService implements OnInit {
     this.getItemIdArray();
   }
 
-  async getItemInfo(id:string) {
-    return this.http.get(this.baseUrl + id);
+  async getBHItemInfo() {
+    this.simpleItemArray.forEach(async item => {
+      await this.getItemInfo(item.id);
+    });
+  }
+
+  private async getItemInfo(id:string) {
+    return this.http.get(this.baseUrl + id).pipe(
+      map((resp: Response) => resp.json().then(
+        res => {
+          this.itemArray.concat(res.json);
+          resolve();
+        }
+      ))
+    )
   }
 
   getItemIdArray(){
