@@ -19,7 +19,7 @@ export class ItemDataService implements OnInit {
     this.getItemIdArray();
   }
 
-  getItemInfo(id:string) {
+  async getItemInfo(id:string) {
     return this.http.get(this.baseUrl + id);
   }
 
