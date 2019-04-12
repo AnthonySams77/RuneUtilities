@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ItemDataService } from '../item-data.service';
 
 @Component({
   selector: 'app-bhshop',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BHShopPage implements OnInit {
   itemsArray = [];
-  constructor() { }
+  constructor(private itemDataService:ItemDataService) { 
+    
+  }
 
   ngOnInit() {
+    this.itemDataService.getBHItemInfo();
   }
 
 }
