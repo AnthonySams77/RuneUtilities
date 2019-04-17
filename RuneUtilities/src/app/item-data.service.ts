@@ -21,10 +21,10 @@ export class ItemDataService implements OnInit {
   constructor(private http:HttpClient) { }
 
   ngOnInit() {
-    this.Master();
+    this.loadBHItemInfo();
   }
 
-  async Master() {
+  async loadBHItemInfo() {
     let response1 = await this.http.get(this.itemJSONLocalUrl);
     let success = await this.extractArrayFromResponseData(response1, this.masterSimpleItemArray);
     let success2 = await this.masterSimpleItemArray.forEach(async (item) => {
@@ -47,35 +47,6 @@ export class ItemDataService implements OnInit {
     );
     return flag;
   }
-
-  
-
-  async getBHItemInfo() {
-    this.simpleItemArray.forEach(async item => {
-      await this.getItemInfo(item.id);
-    });
-  }
-
-  private async getItemInfo(id:string) {
-    return this.http.get(this.baseUrl + id).pipe(
-      map((resp: Response) => resp.json().then(
-        res => {
-          this.itemArray.concat(res.json);
-
-        }
-      ))
-    )
-  }
-
-  getItemIdArray(){
-    return this.http.get(this.itemJSONLocalUrl).pipe(
-      map((resp: Response) => resp.json().then(
-        res => {
-          this.simpleItemArray = res.json;
-        }
-      )));
-  }
-
 }
 
 export interface ISimpleItem {
