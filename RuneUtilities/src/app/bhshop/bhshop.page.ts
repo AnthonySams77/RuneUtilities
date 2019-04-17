@@ -13,7 +13,6 @@ export class BHShopPage implements OnInit {
   }
 
   ngOnInit() {
-    this.itemDataService.getBHItemInfo();
   }
 
 }

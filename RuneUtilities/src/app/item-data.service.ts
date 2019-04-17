@@ -21,23 +21,26 @@ export class ItemDataService implements OnInit {
   constructor(private http:HttpClient) { }
 
   ngOnInit() {
-    this.getItemIdArray();
+    this.Master();
   }
 
   async Master() {
     let response1 = await this.http.get(this.itemJSONLocalUrl);
-    let success = await this.getItemInfoMaster(response1);
-    let success2 = this.masterSimpleItemArray.forEach(async (item) => {
+    let success = await this.extractArrayFromResponseData(response1, this.masterSimpleItemArray);
+    let success2 = await this.masterSimpleItemArray.forEach(async (item) => {
       this.promiseArray.concat(await this.http.get(this.baseUrl + item.id));
-    })
-    //simpleItemArray.concat( await promise1.json);
+    });
+    let success3 = true;
+    await this.promiseArray.forEach(async (item) => {
+      this.extractArrayFromResponseData(item, this.masterItemArray);
+    });
   }
-  private getItemInfoMaster(data:Observable<any>):Boolean {
+  private extractArrayFromResponseData(data:Observable<any>, array:Array<any>):Boolean {
     let flag = false;
     data.pipe(
       map((resp: Response) => resp.json().then(
         res => {
-          this.itemArray.concat(res.json);
+          array.concat(res.json);
           flag = true;
         }
       ))
