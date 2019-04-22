@@ -1,14 +1,14 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from "rxjs/operators";
+import { map, single } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemDataService implements OnInit {
 
-  baseUrl:string = "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
+  baseUrl:string = "https://cors-anywhere.herokuapp.com/http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
   itemJSONLocalUrl:string = "../assets/itemInfo.json";
   simpleItemArray:ISimpleItem[] = [];
   itemArray:IItem[] = [];
@@ -35,6 +35,7 @@ export class ItemDataService implements OnInit {
     });
     Promise.all(this.promiseArray).then((item) => {
       item.forEach((singleItem) => {
+        console.log(singleItem);
         this.itemArray.push(singleItem);
       })
     });
