@@ -9,32 +9,41 @@ import { map } from "rxjs/operators";
 export class ItemDataService implements OnInit {
 
   baseUrl:string = "http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=";
-  itemJSONLocalUrl:string = "./app/assets/itemInfo.json";
-  simpleItemArray:ISimpleItem[] = null;
-  itemArray:IItem[] = null;
-
-  masterSimpleItemArray:ISimpleItem[];
-  masterItemArray:IItem[];
-  promiseArray:any[];
+  itemJSONLocalUrl:string = "../assets/itemInfo.json";
+  simpleItemArray:ISimpleItem[] = [];
+  itemArray:IItem[] = [];
+  promiseArray:Promise<IItem>[] = [];
 
 
-  constructor(private http:HttpClient) { }
-
-  ngOnInit() {
+  constructor(private http:HttpClient) {
     this.loadBHItemInfo();
   }
 
+  ngOnInit() {
+  }
+
   async loadBHItemInfo() {
-    let response1 = await this.http.get(this.itemJSONLocalUrl);
-    let success = await this.extractArrayFromResponseData(response1, this.masterSimpleItemArray);
-    let success2 = await this.masterSimpleItemArray.forEach(async (item) => {
-      this.promiseArray.concat(await this.http.get(this.baseUrl + item.id));
+    await this.http.get<ISimpleItem[]>(this.itemJSONLocalUrl).toPromise()
+      .then((res:IItem[]) => {
+        res.forEach((item:IItem) => {
+          this.simpleItemArray.push(item);
+          });
+        });
+
+    this.simpleItemArray.forEach((item) => {
+      this.promiseArray.push(this.getGEInfo(item.id));
     });
-    let success3 = true;
-    await this.promiseArray.forEach(async (item) => {
-      this.extractArrayFromResponseData(item, this.masterItemArray);
+    Promise.all(this.promiseArray).then((item) => {
+      item.forEach((singleItem) => {
+        this.itemArray.push(singleItem);
+      })
     });
   }
+
+  async getGEInfo(id:string): Promise<IItem>{
+    return this.http.get<IItem>(this.baseUrl + id).toPromise<IItem>();
+  }
+
   private extractArrayFromResponseData(data:Observable<any>, array:Array<any>):Boolean {
     let flag = false;
     data.pipe(
