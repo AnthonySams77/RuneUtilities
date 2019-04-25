@@ -44,19 +44,6 @@ export class ItemDataService implements OnInit {
   async getGEInfo(id:string): Promise<IItem>{
     return this.http.get<IItem>(this.baseUrl + id).toPromise<IItem>();
   }
-
-  private extractArrayFromResponseData(data:Observable<any>, array:Array<any>):Boolean {
-    let flag = false;
-    data.pipe(
-      map((resp: Response) => resp.json().then(
-        res => {
-          array.concat(res.json);
-          flag = true;
-        }
-      ))
-    );
-    return flag;
-  }
 }
 
 export interface ISimpleItem {
