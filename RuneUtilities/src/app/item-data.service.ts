@@ -1,7 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map, single } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +37,7 @@ export class ItemDataService implements OnInit {
         this.itemArray.push(singleItem);
       })
     });
+    console.log(this.itemArray);
   }
 
   async getGEInfo(id:string): Promise<IItem>{
@@ -62,14 +61,11 @@ export interface IItem {
   current:ITrend;
   today:ITrend;
   members:boolean;
-  day30:ITrend;
-  day90:ITrend;
-  day180:ITrend;
 }
 
 export interface ITrend {
   trend:string;
-  price:number;
+  price:string;
 }
 
 export class Item implements IItem {
@@ -83,14 +79,11 @@ export class Item implements IItem {
   current:ITrend;
   today:ITrend;
   members:boolean;
-  day30:ITrend;
-  day90:ITrend;
-  day180:ITrend;
 }
 
 export class Trend implements ITrend {
   trend:string;
-  price:number;
+  price:string;
 }
 
 export enum ItemId {

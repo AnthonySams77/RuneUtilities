@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ItemDataService } from '../item-data.service';
+import { ItemDataService, IItem } from '../item-data.service';
 
 @Component({
   selector: 'app-bhshop',
@@ -7,9 +7,8 @@ import { ItemDataService } from '../item-data.service';
   styleUrls: ['./bhshop.page.scss'],
 })
 export class BHShopPage implements OnInit {
-  itemsArray = [];
-  constructor(private itemDataService:ItemDataService) { 
-    
+  itemsArray:Array<IItem> = [];
+  constructor(private itemDataService:ItemDataService) {
   }
 
   ngOnInit() {
