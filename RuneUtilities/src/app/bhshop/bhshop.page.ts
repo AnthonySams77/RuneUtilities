@@ -10,7 +10,7 @@ export class BHShopPage implements OnInit {
   itemsArray:Array<IItem> = [];
   constructor(private itemDataService:ItemDataService) {
   }
-
+  //parseFloat("59.7k".split("k")[0]) * 1000
   ngOnInit() {
   }
 
