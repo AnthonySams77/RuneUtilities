@@ -22,8 +22,8 @@ export class ItemDataService implements OnInit {
 
   async loadBHItemInfo() {
     await this.http.get<ISimpleItem[]>(this.itemJSONLocalUrl).toPromise()
-      .then((res:IItem[]) => {
-        res.forEach((item:IItem) => {
+      .then((res:ISimpleItem[]) => {
+        res.forEach((item:ISimpleItem) => {
           this.simpleItemArray.push(item);
           });
         });
@@ -31,13 +31,18 @@ export class ItemDataService implements OnInit {
     this.simpleItemArray.forEach((item) => {
       this.promiseArray.push(this.getGEInfo(item.id));
     });
-    Promise.all(this.promiseArray).then((item) => {
-      item.forEach((singleItem) => {
-        console.log(singleItem);
-        this.itemArray.push(singleItem);
+    Promise.all(this.promiseArray).then((items:Item[]) => {
+      items.forEach((singleItem:Item) => {
+        this.simpleItemArray.forEach((simpleItem:ISimpleItem) => {
+          console.log(singleItem);
+          if (singleItem.item.id.toString() === simpleItem.id) {
+            singleItem.item.bhPrice = simpleItem.BhPrice;
+            singleItem.item.goldRatio = (parseFloat(singleItem.item.current.price.split("k")[0]) * 1000) / singleItem.item.bhPrice;
+            this.itemArray.push(singleItem);
+          }
+        })
       })
     });
-    console.log(this.itemArray);
   }
 
   async getGEInfo(id:string): Promise<IItem>{
@@ -48,19 +53,21 @@ export class ItemDataService implements OnInit {
 export interface ISimpleItem {
   name:string;
   id:string;
+  BhPrice:number;
 }
 
 export interface IItem {
+  item: {
   icon:string;
   icon_large:string;
   id:string;
-  type:string;
   typeIcon:string;
   name:string;
-  description:string;
   current:ITrend;
   today:ITrend;
-  members:boolean;
+  goldRatio:number;
+  }
+  
 }
 
 export interface ITrend {
@@ -69,30 +76,33 @@ export interface ITrend {
 }
 
 export class Item implements IItem {
+  item: {
   icon:string;
   icon_large:string;
   id:string;
-  type:string;
   typeIcon:string;
   name:string;
-  description:string;
   current:ITrend;
   today:ITrend;
-  members:boolean;
+  bhPrice:number;
+  goldRatio:number;
+  }
+
+  constructor(item:Partial<IItem>, bhPoint?:number) {
+    Object.assign(item);
+    this.item.bhPrice = bhPoint;
+  }
+  public addBhPrice(bhPoint:number): void {
+    this.item.bhPrice = bhPoint;
+  }
+
+  public getGoldRatio():number {
+    return (parseFloat(this.item.today.price.split("k")[0]) * 1000) / this.item.bhPrice;
+  }
+  
 }
 
 export class Trend implements ITrend {
   trend:string;
   price:string;
-}
-
-export enum ItemId {
-  DragonScimitar = 4587,
-  DragonLongsword = 1305,
-  DragonDagger = 1215,
-  DragonBattleAxe = 1377,
-  DragonMace = 1434,
-  DragonHalberd = 3204,
-  HelmOfNeitiznot = 10828,
-  BerserkerHelm = 3751
 }
