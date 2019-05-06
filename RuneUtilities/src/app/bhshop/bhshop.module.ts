@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { BHShopPage } from './bhshop.page';
+//import { NgPrimeComponentsModule } from '../ngprime-components.module';
 
 const routes: Routes = [
   {
@@ -20,7 +21,9 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
+    //NgPrimeComponentsModule
   ],
-  declarations: [BHShopPage]
+  declarations: [BHShopPage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BHShopPageModule {}
